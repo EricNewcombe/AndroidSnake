@@ -1,6 +1,7 @@
 package com.example.eric.snake;
 
 
+import android.util.Log;
 
 /**
  * Created by Eric on 16-12-15.
@@ -10,23 +11,47 @@ public class Snake {
     private Node head, tail;
     private int xSpeed, ySpeed;
     private int speedMultiplier;
-    private enum direction {UP, DOWN, LEFT, RIGHT}
+    protected enum direction {UP, DOWN, LEFT, RIGHT}
     private direction currentDirection;
+    private static final String TAG = "Snake";
 
-    public Snake(int startingLength) {
+    //TODO Export these to a gameboard file
+    private int boardWidth, boardHeight;
+
+    public Snake(int startingLength, int boardWidth, int boardHeight) {
         head = new Node();
-        initializeBody(startingLength);
-        currentDirection = direction.DOWN;
+        initializeBody( startingLength );
+        setDirection(direction.DOWN);
+        this.boardWidth = boardWidth;
+        this.boardHeight = boardHeight;
 
     }
 
-    private void initializeBody( int bodyLength ) {
+    /**
+     * Initializes the body nodes of the snake
+     * @param snakeLength Number of nodes to add to the body
+     */
+    private void initializeBody( int snakeLength ) {
+
         Node currentNode = head;
-        for ( int i = 1; i <= bodyLength; i++ ) {
-            currentNode.setNextNode( new Node(0,-i), currentNode );
+        Node newNode = null;
+
+        for ( int i = 1; i <= snakeLength; i++ ) {
+
+            // Create the next node in the body and set its previous reference to the node before it
+            newNode = new Node(0, -i);
+            newNode.setPreviousNode(currentNode);
+
+            // Set the current node's next reference to the new node
+            currentNode.setNextNode( newNode );
+
+            // Iterate to the next node
             currentNode = currentNode.getNextNode();
+
         }
+
         tail = currentNode;
+
     }
 
     /**
@@ -60,6 +85,7 @@ public class Snake {
      * @return Whether the snake has collided with something
      */
     public boolean tick() {
+        Log.d(TAG, "speed: (" + this.xSpeed + ", " + this.ySpeed + ")" );
         move();
         return checkCollision() ? false : true;
     }
@@ -70,23 +96,28 @@ public class Snake {
      */
     private void move() {
 
-        Position newHeadPos = head.getPosition();
-        newHeadPos.shift(xSpeed, ySpeed);
-
-        Node newHead = new Node(newHeadPos, head);
-
-
+        // Iterrate over the body of the snake setting the previous position
         Node currentNode = tail;
+        Node prevNode = null;
 
         while ( currentNode != null ) {
 
             if ( currentNode.getPreviousNode() == null ) { break; }
 
-            currentNode.setPosition(currentNode.getPreviousNode().getPosition());
+            prevNode = currentNode.getPreviousNode();
+            Position newPosition = prevNode.getPosition();
+
+//            Log.d(TAG, "move: " + newPosition);
+
+            currentNode.setPosition(newPosition);
             currentNode = currentNode.getPreviousNode();
+
         }
 
-        head = newHead;
+        // move the head
+        Position newHeadPos = head.getPosition();
+        newHeadPos.shift(xSpeed, ySpeed);
+        head.setPosition(newHeadPos);
 
     }
 
@@ -96,21 +127,35 @@ public class Snake {
     public void grow() {
         Node newTail = new Node(0,0);
         tail.setNextNode(newTail);
-        newTail.setPrevNode(tail);
+        newTail.setPreviousNode(tail);
 
         tail = newTail;
     }
 
+    /**
+     * Checks to see if the snake head is in the bounds of the map, and if it is not colliding with itself
+     * @return True if there is is a collision with the wall or the snake eats itself
+     */
     private boolean checkCollision () {
 
-        Node currentNode = tail;
+        // Check if head is out of bounds
+        Position headPos = head.getPosition();
+        if ( headPos.x < 0 || headPos.y < 0 || headPos.x > boardWidth || headPos.y > boardHeight ) {
+            return true;
+        }
 
-        while ( currentNode.getPreviousNode() != null ) {
-            if ( currentNode.equals(head) ) { break; }
+        // Check if snake eating itself by iterating over the body
+        Node currentNode = head.getNextNode();
+
+        while ( currentNode.getNextNode() != null ) {
+
+            // Check to see if the head is in the same tile as the body node
             if ( currentNode.getPosition().equals(head.getPosition()) ) {
                 return true;
             }
+            currentNode = currentNode.getNextNode();
         }
+        //Log.e(TAG, "checkCollision: Collided" );
         return false;
     }
 

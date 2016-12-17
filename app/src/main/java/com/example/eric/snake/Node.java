@@ -31,16 +31,11 @@ public class Node {
         this.next = n;
     }
 
-    public void setNextNode ( Node n, Node p ) {
-        this.next = n;
-        this.prev = p;
-    }
-
     public Node getNextNode () {
         return this.next;
     }
 
-    public void setPrevNode ( Node p ) {
+    public void setPreviousNode ( Node p ) {
         this.prev = p;
     }
 
@@ -48,8 +43,9 @@ public class Node {
         return this.prev;
     }
 
+    // Return a shallow copy as opposed to a reference to the pos object
     public Position getPosition() {
-        return pos;
+        return new Position(pos.x, pos.y);
     }
 
     public void setPosition ( Position pos ) {
