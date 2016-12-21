@@ -3,6 +3,8 @@ package com.example.eric.snake;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by Eric on 16-12-15.
  */
@@ -85,7 +87,7 @@ public class Snake {
      * @return Whether the snake has collided with something
      */
     public boolean tick() {
-        Log.d(TAG, "speed: (" + this.xSpeed + ", " + this.ySpeed + ")" );
+        Log.d(TAG, "speed: (" + this.xSpeed + ", " + this.ySpeed + ")");
         move();
         return checkCollision() ? false : true;
     }
@@ -174,5 +176,22 @@ public class Snake {
         }
 
         return s;
+    }
+
+    /**
+     * Loops through and gets all the positions of every segment of the snake
+     * @return positions of all parts of the snake
+     */
+    public ArrayList<Position> getPositions() {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        Node currentNode = head;
+
+        while ( currentNode.getNextNode() != null ) {
+            positions.add(currentNode.getPosition());
+            currentNode = currentNode.getNextNode();
+        }
+
+        return positions;
     }
 }
