@@ -1,19 +1,13 @@
 package com.example.eric.snake;
 
-import com.example.eric.snake.Position;
-import com.example.eric.snake.Snake;
-
 import org.junit.Test;
 
-import java.lang.Exception;
 import java.util.ArrayList;
 
-import dalvik.annotation.TestTargetClass;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ * Created by Eric on 16-12-21.
  */
 public class SnakeTest {
 
@@ -52,14 +46,13 @@ public class SnakeTest {
 
         ArrayList<Position> snakePositions = s.getPositions();
 
-        assertEquals
         s.tick();
 
         snakePositions = s.getPositions();
 
         Position theoreticalTailPosition = new Position( 0, numberOfTicks - snakePositions.size() );
 
-        assertEquals( theoreticalTailPosition, snakePositions.get(snak))
+        assertEquals( theoreticalTailPosition, snakePositions.get( snakePositions.size() - 1 ) );
 
     }
 }
