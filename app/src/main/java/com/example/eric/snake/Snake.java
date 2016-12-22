@@ -1,8 +1,6 @@
 package com.example.eric.snake;
 
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 /**
@@ -14,7 +12,7 @@ public class Snake {
     private int xSpeed, ySpeed;
     private int speedMultiplier;
     protected enum direction {UP, DOWN, LEFT, RIGHT}
-    private direction currentDirection;
+    private direction currentDirection, nextDirection;
     private static final String TAG = "Snake";
 
     //TODO Export these to a gameboard file
@@ -60,16 +58,18 @@ public class Snake {
      * Changes the direction of the snake
      * @param d The new direction the snake should be moving
      */
-    public void setDirection(direction d) {
+    public boolean setDirection(direction d) {
+
         // Check to see if the new direction will be the opposite of the current direction
-        if (    d == currentDirection ||
-                (currentDirection == direction.UP && d == direction.DOWN) ||
+        if (    (currentDirection == direction.UP && d == direction.DOWN) ||
                 (currentDirection == direction.DOWN && d == direction.UP) ||
                 (currentDirection == direction.LEFT && d == direction.RIGHT) ||
                 (currentDirection == direction.RIGHT && d == direction.LEFT)) {
-            return;
+            System.out.println(d + " " + currentDirection);
+            return false;
         };
 
+        if ( currentDirection == null ) { currentDirection = d; }
 
         if ( d == direction.UP || d == direction.DOWN ){
             xSpeed = 0;
@@ -79,6 +79,10 @@ public class Snake {
             ySpeed = 0;
         }
 
+        nextDirection = d;
+
+        return true;
+
     }
 
     /**
@@ -87,9 +91,14 @@ public class Snake {
      * @return Whether the snake has collided with something
      */
     public boolean tick() {
-        Log.d(TAG, "speed: (" + this.xSpeed + ", " + this.ySpeed + ")");
+        // Log.d(TAG, "speed: (" + this.xSpeed + ", " + this.ySpeed + ")");
+        updateCurrentDirection();
         move();
         return checkCollision() ? false : true;
+    }
+
+    private void updateCurrentDirection() {
+        currentDirection = nextDirection;
     }
 
     /**
@@ -152,7 +161,7 @@ public class Snake {
         while ( currentNode.getNextNode() != null ) {
 
             // Check to see if the head is in the same tile as the body node
-            if ( currentNode.getPosition().equals(head.getPosition()) ) {
+            if ( currentNode.getPosition().equals( head.getPosition() ) ) {
                 return true;
             }
             currentNode = currentNode.getNextNode();
