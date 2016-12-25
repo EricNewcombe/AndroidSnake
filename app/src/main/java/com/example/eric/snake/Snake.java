@@ -11,9 +11,10 @@ public class Snake {
     private Node head, tail;
     private int xSpeed, ySpeed;
     private int speedMultiplier;
-    protected enum direction {UP, DOWN, LEFT, RIGHT}
-    private direction currentDirection, nextDirection;
+    protected enum Direction {UP, DOWN, LEFT, RIGHT}
+    private Direction currentDirection, nextDirection;
     private static final String TAG = "Snake";
+    private Position apple;
 
     //TODO Export these to a gameboard file
     private int boardWidth, boardHeight;
@@ -21,10 +22,9 @@ public class Snake {
     public Snake(int startingLength, int boardWidth, int boardHeight) {
         head = new Node();
         initializeBody( startingLength );
-        setDirection(direction.DOWN);
+        setDirection(Direction.DOWN);
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
-
     }
 
     /**
@@ -55,27 +55,27 @@ public class Snake {
     }
 
     /**
-     * Changes the direction of the snake
-     * @param d The new direction the snake should be moving
+     * Changes the Direction of the snake
+     * @param d The new Direction the snake should be moving
      */
-    public boolean setDirection(direction d) {
+    public boolean setDirection(Direction d) {
 
-        // Check to see if the new direction will be the opposite of the current direction
-        if (    (currentDirection == direction.UP && d == direction.DOWN) ||
-                (currentDirection == direction.DOWN && d == direction.UP) ||
-                (currentDirection == direction.LEFT && d == direction.RIGHT) ||
-                (currentDirection == direction.RIGHT && d == direction.LEFT)) {
+        // Check to see if the new Direction will be the opposite of the current Direction
+        if (    (currentDirection == Direction.UP && d == Direction.DOWN) ||
+                (currentDirection == Direction.DOWN && d == Direction.UP) ||
+                (currentDirection == Direction.LEFT && d == Direction.RIGHT) ||
+                (currentDirection == Direction.RIGHT && d == Direction.LEFT)) {
             System.out.println(d + " " + currentDirection);
             return false;
         };
 
         if ( currentDirection == null ) { currentDirection = d; }
 
-        if ( d == direction.UP || d == direction.DOWN ){
+        if ( d == Direction.UP || d == Direction.DOWN ){
             xSpeed = 0;
-            ySpeed = d == direction.UP ? -1 : 1;
+            ySpeed = d == Direction.UP ? -1 : 1;
         } else {
-            xSpeed = d == direction.LEFT ? -1 : 1;
+            xSpeed = d == Direction.LEFT ? -1 : 1;
             ySpeed = 0;
         }
 
@@ -202,5 +202,15 @@ public class Snake {
         }
 
         return positions;
+    }
+
+    /**
+     * Generates the position of the apple
+     */
+    public Position generateApple() {
+        // TODO generate the position of the apple based on the size of the map
+        Position apple = new Position(1,1);
+
+        return apple;
     }
 }

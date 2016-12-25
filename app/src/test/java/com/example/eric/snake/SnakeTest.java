@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.*;
 
 /**
@@ -17,10 +19,10 @@ public class SnakeTest {
 
         Position p1 = new Position( 1, 1 );
 
-        s.setDirection(Snake.direction.DOWN);
+        s.setDirection(Snake.Direction.DOWN);
         s.tick();
 
-        s.setDirection(Snake.direction.RIGHT);
+        s.setDirection(Snake.Direction.RIGHT);
         s.tick();
 
         ArrayList<Position> snakePositions = s.getPositions();
@@ -62,23 +64,23 @@ public class SnakeTest {
     public void testDirection() {
         Snake s = new Snake( 4, 10, 10 );
 
-        assertTrue( s.setDirection( Snake.direction.RIGHT) );
-        assertFalse ( s.setDirection( Snake.direction.LEFT) );
+        assertTrue( s.setDirection( Snake.Direction.RIGHT) );
+        assertFalse ( s.setDirection( Snake.Direction.LEFT) );
 
         s.tick();
 
-        assertTrue( s.setDirection( Snake.direction.DOWN ) );
-        assertFalse( s.setDirection( Snake.direction.UP ) );
+        assertTrue( s.setDirection( Snake.Direction.DOWN ) );
+        assertFalse( s.setDirection( Snake.Direction.UP ) );
 
         s.tick();
 
-        assertTrue( s.setDirection(Snake.direction.LEFT ) );
-        assertFalse( s.setDirection(Snake.direction.RIGHT ) );
+        assertTrue( s.setDirection(Snake.Direction.LEFT ) );
+        assertFalse( s.setDirection(Snake.Direction.RIGHT ) );
 
         s.tick();
 
-        assertTrue( s.setDirection( Snake.direction.UP ) );
-        assertFalse( s.setDirection(Snake.direction.DOWN ) );
+        assertTrue( s.setDirection( Snake.Direction.UP ) );
+        assertFalse( s.setDirection(Snake.Direction.DOWN ) );
 
     }
 
