@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Eric on 16-12-24.
@@ -78,5 +81,8 @@ public class GameView extends View {
 
     public void setSnakeDirection ( Snake.Direction d ) {
         s.setDirection(d);
+        Log.d(TAG, "setSnakeDirection: " + d);
     }
+
+
 }
